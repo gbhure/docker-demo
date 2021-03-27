@@ -1,0 +1,6 @@
+FROM python:2.7
+COPY . /tmp
+RUN pip install -r /tmp/requirements.txt
+EXPOSE 8080
+ENTRYPOINT [“echo”]
+CMD [ "python", "http_serv.py" ]

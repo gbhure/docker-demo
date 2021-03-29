@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    name: web
+  name: web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      name: web
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        name: web
+    spec:
+      containers:
+      - image: rajendrait99/flaskapp:1.0
+        name: flaskapp
+        env:       
+          - name: "REDIS_HOST"
+            value: "localhost"
+        ports:
+          - containerPort: 5000
+            name: http
+            protocol: TCP
+        resources: {}
+      - name: redis
+        image: redis
+        ports:
+          - containerPort: 6379
+            name: redis
+            protocol: TCP
+
+status: {}

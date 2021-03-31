@@ -9,7 +9,7 @@ redis = Redis(host=os.environ.get('REDIS_HOST', 'redis'), port=6379)
 @app.route('/')
 def hello():
     redis.incr('hits')
-    return (f'Hello from Container! I have been seen {redis.get('hits')} times and my hostname is {socket.gethostname()}\n')
+    return 'Hello from Container! I have been seen %s times and my hostname is %s\n' % (redis.get('hits'), socket.gethostname())
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080, debug=True)

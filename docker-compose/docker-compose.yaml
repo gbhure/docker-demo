@@ -1,0 +1,8 @@
+version: '3.3'
+services:
+    db:
+        image: gbhure/mysql:1.0
+    webapp:
+        image: gbhure/webapp:1.0
+        ports:
+            - "84:80"

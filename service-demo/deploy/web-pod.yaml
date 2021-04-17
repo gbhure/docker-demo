@@ -14,7 +14,7 @@ spec:
           name: redis
           protocol: TCP
     - name: python
-      image: rajendrait99/flaskapp:1.0
+      image: gbhure/webapp:1.0
       env:       
         - name: "REDIS_HOST"
           value: "localhost"

@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx-rs
+  labels:
+    author: ganesh
+    type: web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      type: web
+  template:
+    metadata:
+      name: nginx-pod
+      labels:
+        type: web
+    spec:
+      containers:
+        - name: nxing-pod
+          image: nginx
+

@@ -1,0 +1,84 @@
+# k label nodes demo2-worker2 env=prod
+# k get nodes -show-labels demo2-worker2
+
+spec:
+    containers:
+      - name: c1
+        image: nginx
+    nodeSelector:
+        env: test
+
+
+# k create job myjob1 ——image=busybox --dye-run=client -o yaml —— sleep 20 > job.yaml
+# k apply -f job.yaml
+
+To perform 5 times.. Add below spec in job.yaml
+Spec:
+    Completions: 5
+
+It will create 5 pods.. run in sequence
+Add parallelism: 3 —> at any given point of time, 3 pods will be in running state.. till we have 5 completed ..
+
+
+Cronjob… www.crontab.guru
+# k create cj mycj1 —image=busybox ——schedule=“*/1 8 * * *” —dry-run=client -o yaml —— sleep 10 > mycj.yaml
+# k delete myjob1
+# k apply -f mycj.job
+You can see one job created.. then in 60sec, new job will be created..  it will keep doing every min.. 
+
+
+Daemonset —> create exactly one instance of pod on all the nodes.. e.g. monitoring tool to be present on each node (only one instance), logging, backup etc
+Even if new 5 nodes added in the cluster, it will create a pod on all these new nodes. It is a type of controller used to run daemon type of application like monitoring, logging daemons
+
+# k get pods -n kube-system -o wide
+# k get ds —> kindnet and kube-proxy are two deamonsets.. which ensures that these pods will be created on each node (including master)
+
+DaemonSet
+———
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: nginx
+  labels:
+    k8s-app: nginx
+spec:
+  selector:
+    matchLabels:
+      name: nginx
+  template:
+    metadata:
+      labels:
+        name: nginx
+    spec:
+      tolerations:
+      # this toleration is to have the daemonset runnable on master nodes
+      # remove it if your masters can't run pods
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+        effect: NoSchedule
+      containers:
+      - name: nginx
+        image: nginx
+           
+# k delete ds nginx
+# k apply ds ds.yaml
+
+
+
+# k get po —show-labels
+# k run nginx —image=nginx
+# k label pod nginx app=test
+# k label no worker2 app=test
+# k label no worker2 test-
+# k label no worker2 hdd=ssd
+pod.yaml
+Spec:
+  nodeSelector: 
+      hdd: ssd
+  containers:
+    - image: nginx
+
+
+Pods by default are not allowed to be scheduled on master. Master will have some taint so not scheduled.
+
+

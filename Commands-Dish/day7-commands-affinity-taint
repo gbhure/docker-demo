@@ -1,0 +1,319 @@
+
+Commands
+———
+ 1867  k create job myjob1 --image=busybox --dry-run=client -o yaml -- sleep 5 > job.yaml
+ 1868  k delete job myjob1
+ 1869  k apply -f job.yaml 
+ 1870  k get all
+ 1871  k describe po myjob1-8k9pb
+ 1872  k get all
+ 1873  vi job.yaml 
+ 1874  k explain job.spec
+ 1875  k get all
+ 1876  k delete job myjob1
+ 1877  k get all
+ 1878  k apply -f job.yaml 
+ 1879  k get all
+ 1880  k explain job.spec
+ 1881  vi job.yaml 
+ 1882  k apply -f job.yaml 
+ 1883  history
+ 1884  cat job.yaml 
+ 1885  k get all
+ 1886  history
+ 1887  cat job.yaml 
+ 1888  k get all
+ 1889  k explain job.spec
+ 1890  k explain job.spec.parallelism
+ 1891  k explain pod.spec
+ 1892  k explain pod.spec.containers
+ 1893  pwd
+ 1894  k get all
+ 1895  k delete job myjob1
+ 1896  k get all
+ 1897  cat myj
+ 1898  cat job.yaml 
+ 1899  k apply -f job.yaml 
+ 1900  k get all
+ 1901  vi job.yaml 
+ 1902  k delete job myjob1
+ 1903  k get all
+ 1904  k apply -f job.yaml 
+ 1905  watch kubectl get all
+ 1906  history
+ 1907  vi pod-nginx.yaml 
+ 1908  k explain po.spec
+ 1909  k explain po.spec.affinity
+ 1910  ls
+ 1911  k get nodes --show-labels
+ 1912  cat pod-tomcat.yaml 
+ 1913  k explain po.spec.affinity
+ 1914  k explain po.spec.affinity.nodeAffinity
+ 1915  k explain po.spec.affinity.nodeAffinity.preferredDuringSchedulingIgnoredDuringExecution
+ 1916  k explain po.spec.affinity.nodeAffinity.preferredDuringSchedulingIgnoredDuringExecution.preference
+ 1917  k explain po.spec.affinity.nodeAffinity.preferredDuringSchedulingIgnoredDuringExecution.preference.matchExpressions
+ 1918  vi pod-nginx.yaml 
+ 1919  k explain po.spec.affinity.nodeAffinity
+ 1920  k explain po.spec.affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution
+ 1921  k explain po.spec.affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms
+ 1922  vi pod-nginx.yaml 
+ 1923  watch kubectl get all
+ 1924  cat pod-nginx.yaml 
+ 1927  k delete job myjob1
+ 1928  k get all
+ 1929  cp pod-nginx.yaml node-affinity.yaml
+ 1930  vi pod-nginx.yaml 
+ 1931  vi node-affinity.yaml 
+ 1932  k apply -f node-affinity.yaml 
+ 1933  cat node-affinity.yaml 
+ 1934  vi node-affinity.yaml 
+ 1935  cat node-affinity.yaml 
+ 1936  k apply -f node-affinity.yaml 
+ 1937  vi node-affinity.yaml 
+ 1938  k apply -f node-affinity.yaml 
+ 1940  cat node-affinity.yaml 
+ 1941  k get nodes --show-labels
+ 1942  k get all
+ 1943  k describe po nginx-pod1
+ 1944  cat node-affinity.yaml 
+ 1945  vi node-affinity.yaml 
+ 1946  k get all
+ 1947  k delete po nginx-pod1
+ 1948  k apply -f node-affinity.yaml 
+ 1949  k get all
+ 1951  cat node-affinity.yaml 
+ 1952  k pod.spec.nodeaffinity
+ 1953  k pod.spec.affinity.nodeaffinity
+ 1954  k explain pod.spec.affinity.nodeaffinity
+ 1955  k explain pod.spec.affinity.nodeAffinity
+ 1956  k explain pod.spec.affinity.nodeAffinity.preferredDuringSchedulingIgnoredDuringExecution
+ 1957  k explain pod.spec.affinity.nodeAffinity.preferredDuringSchedulingIgnoredDuringExecution.preference
+ 1958  k explain pod.spec.affinity.nodeAffinity.preferredDuringSchedulingIgnoredDuringExecution
+ 1959  cat node-affinity.yaml 
+ 1974  k get all
+ 1975  k delete po nginx-pod1
+ 1976  k apply -f node-affinity1.yaml 
+ 1977  k get all
+ 1978  cat node-affinity1.yaml 
+ 1979  k expose pod nginx-pod --type=NodePort --port=80 --dry-run=client -o yaml
+ 1980  pwd
+ 1981  ls -ltrh
+ 1982  cat node-affinity1.yaml 
+ 1983  cp node-affinity.yaml pod-affinity.yaml
+ 1984  vi pod-affinity.yaml 
+ 1985  k explain po.spec.affinity
+ 1986  k explain po.spec.affinity.podaffinity
+ 1987  k explain po.spec.affinity.podAffinity
+ 1988  cat pod-affinity.yaml 
+ 1989  k explain po.spec.affinity.podAffinity.requiredDuringSchedulingIgnoredDuringExecution
+ 1990  k explain po.spec.affinity.podAffinity.requiredDuringSchedulingIgnoredDuringExecution.labelSelector
+ 1994  k describe node demo2-worker2
+ 1995  k describe node demo2-control-plane
+
+
+ubuntu@ip-172-31-66-193:~/k8s$ cat pod-nginx.yaml 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod1
+  labels:
+    app: nginx-app1
+spec:
+  containers:
+    - name: c1
+      image: nginx:1.9.0
+
+  nodeSelector:
+    env: prod
+
+
+ubuntu@ip-172-31-66-193:~/k8s$ cat node-affinity.yaml 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod1
+  labels:
+    app: nginx-app1
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: hdd
+                operator: In
+                values:
+                  - ssd
+                  - normal
+          - matchExpressions:
+              - key: env
+                operator: In
+                values:
+                  - test
+  containers:
+    - name: c1
+      image: nginx:1.9.0
+
+
+ubuntu@ip-172-31-66-193:~/k8s$ cat node-affinity1.yaml 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod1
+  labels:
+    app: nginx-app1
+spec:
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1
+        preference:
+          matchExpressions:
+            - key: hdd
+              operator: In
+              values:
+                - ssd
+  containers:
+    - name: c1
+      image: nginx:1.9.0
+
+
+ubuntu@ip-172-31-66-193:~/k8s$ cat pod-affinity.yaml 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod1
+  labels:
+    app: nginx-app1
+spec:
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        labelSelector:
+          - matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - tom-app
+  containers:
+    - name: c1
+      image: nginx:1.9.0
+
+
+
+Quiz
+—
+Quiz-1
+—
+What is the meaning of containerisation?
+a. Build applications on containers natively
+b. Run VMs in containers
+c. Repackage applications to run on containers
+d. Run containers in containers
+Ans: c
+
+A Deployment is a kubernetes object that provides updates to which of the following options?
+a. ConfigMaps and Secrets
+b. ReplicaSets and Replication Controller
+c. Services and Pods
+d. Pods and ReplicaSets
+Ans: d
+
+What is the purpose of using DaemonSet?
+a Running a daemon on etcd
+b Running a daemon outside kubernetes
+c Running a pod in each compute nodes of a kubernetes cluster
+d Running a database
+Ans: c
+
+What is the function of labels?
+a. To classify functions
+b. To tag containers and link them together in groups
+c. To assign functions to pods
+d. To be ignored by millennials
+Ans: b
+
+What is a kubelet?
+a. A node agent that manages pods and their containers
+b. Software that is used to run containers outside of pods
+c. A smaller version of Kubernetes
+d. A device that collects data in an organized manner for easy access
+Ans: a
+
+The command to create Kubernetes service is
+a. Kubectl expose
+b. Kubectl set service
+c. Kubectl run sac
+d. Kubectl deploy
+Ans: a
+
+Which of the following k8s resources do not associate with any namespace.
+a. DaemonSets
+b. ReplicaSets
+c. Nodes
+d. Services
+Ans: c
+
+________ is responsible for health check of the pods running on individual nodes
+a. Kubectl
+b. Kube controller manager
+c. Kube scheduler
+d. Kubelet
+Ans: d
+
+As soon a service starts, __________ daemon running on each node add a set of environment variables on the pod for each active service.
+a. DaemonSet
+b. Kubelet
+c. Kubeadm
+d. Kubectl
+Ans: b
+
+What command should you run to see all container in Docker?
+a. docker ps
+b. docker ls
+c. docker ps -a
+d. docker ls -a
+Ans: c
+
+What is a pod in Kubernetes and what does it do?
+a. A collection of physical IT components that supports a group of containers
+b. A collection of logic circuitry that evaluates a computer's operational code
+c. Where you find peas
+d. One or more containers grouped together to share resources and run as a unit
+Ans: d
+
+What does below command do?
+kubectl set image deployment nginx nginx=nginx:1.15
+a. Set image is not a valid kubectl command
+b. Delete the pod and create a new pod with nginx 1.15 image in another namespace
+c. Updates the image
+d. Run a pod with nginx 1.15 version
+Ans: c
+
+What is the default range of ports used to expose a NodePort service?
+a. 32000 onwards
+b. 30000-32767
+c. 1024-32767
+d. Any port supported
+
+Which component of the K8's worker stack registers Nodes with the cluster and watches the "apiserver" for new work?
+a. Kube-proxy
+b. Kubelet
+c. Kubectl
+d. Container runtime
+Ans: b
+
+What is the default Service type (ServiceType) if you do NOT specify a value?
+a. NodePort
+b. ClusterIP
+c. LoadBalancer
+d. Ingress
+Ans: b
+
+Which of the following options provides standard unit of software that packages up code and all its dependencies, so that the application runs quickly and reliably from one computing environment to another?
+a. Container
+b. Kubernetes
+c. Services
+d. Service Mesh
+Ans: a
+

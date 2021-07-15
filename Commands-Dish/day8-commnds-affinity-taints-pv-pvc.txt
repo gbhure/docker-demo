@@ -1,0 +1,262 @@
+
+ root@ip-172-31-66-193:~/k8s# cat pod-tolerations.yaml 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod1
+  labels:
+    app: nginx-app1
+spec:
+  containers:
+    - name: c1
+      image: nginx:1.9.0
+  tolerations:
+    - key: type
+      operator: Equal
+      value: master
+      effect: NoSchedule
+    - key: node-role.kubernetes.io/master
+      operator: Exists
+      effect: NoSchedule
+
+
+root@ip-172-31-66-193:~/k8s# cat pv-pvc-pod.yaml 
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv1
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: /opt
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc1
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod1
+  labels:
+    app: nginx-app1
+spec:
+  containers:
+    - name: c1
+      image: nginx:1.9.0
+      volumeMounts:
+        - name: myvol
+          mountPath: /etc/new_vol
+  volumes:
+    - name: myvol
+      persistentVolumeClaim:
+        claimName: pvc1
+
+
+ 2068  k describe no demo-control-plane
+ 2069  vi pod-nginx.yaml 
+ 2070  cat pod-nginx.yaml 
+ 2071  k get all -o wide
+ 2072  k apply -f pod-nginx.yaml 
+ 2073  k get all -o wide
+ 2074  cat pod-nginx.yaml 
+ 2078  k uncordon demo-worker
+ 2079  k uncordon demo-worker2
+ 2080  k get nodes
+ 2081  cat pod-nginx.yaml 
+ 2082  cp pod-nginx.yaml pod-tolerations.yaml
+ 2083  vi pod-nginx.yaml 
+ 2086  cat pod-tolerations.yaml 
+ 2087  k get all -o wide
+ 2088  cat pod-nginx.yaml 
+ 2089  k taint node demo-worker type=master:PreferNoSchedule
+ 2090  k describe demo-worker
+ 2091  k describe no demo-worker
+ 2092  k get all -o wide
+ 2093  k cordon demo-worker2
+ 2094  k apply -f pod-nginx.yaml 
+ 2095  vi pod-nginx.yaml 
+ 2096  k get all -o wide
+ 2097  k delete po nginx-pod1
+ 2098  k apply -f pod-nginx.yaml 
+ 2099  k get all -o wide
+ 2100  k describe no demo-worker
+ 2101  k get all -o wide
+ 2103  cat pod-nginx.yaml 
+ 2104  k get all -o wide
+ 2105  k taint node demo-worker type1=master1:NoExecute
+ 2106  k get all -o wide
+ 2107  k taint node demo-worker type1=master1-
+ 2108  k taint node demo-worker type1-
+ 2109  k apply -f pod-nginx.yaml 
+ 2110  k get all -o wide
+ 2113  vi pod-tomcat.yaml 
+ 2114  cp pod-tomcat.yaml pod2-tomcat.yaml
+ 2115  vi pod-tomcat.yaml 
+ 2116  k apply -f pod-tomcat.yaml
+ 2117  k get all -o wide
+ 2118  cat pod-tomcat.yaml 
+ 2119  k taint node demo-worker type1=master1:NoExecute
+ 2120  k get all -o wide
+ 2122  cat pod-tomcat.yaml 
+ 2123  cat pod-nginx.yaml 
+ 2124  vi pv.yaml
+ 2125  k explain pv.spec
+ 2126  vi pv.yaml
+ 2127  cat pv.yaml
+ 2128  vi pv.yaml
+ 2129  k get pv
+ 2130  k apply -f pv.yaml 
+ 2131  k get pv
+ 2136  k describe pv pv1
+ 2138  cat pv.yaml 
+ 2139  cp pv.yaml pvc.yaml
+ 2141  vi pvc.yaml 
+ 2142  k apply -f pvc.yaml 
+ 2143  k get pv
+ 2144  k get pvc
+ 2145  k get pv
+ 2146  cp pod-nginx.yaml pod-volume.yaml
+ 2147  vi pod-volume.yaml 
+ 2148  k get pv
+ 2149  k get pvc
+ 2150  k apply -f pod-volume.yaml 
+ 2151  k get po
+ 2152  k get pv
+ 2153  k get pvc
+ 2154  k describe po nginx-pod1
+ 2155  k get nodes - o wide
+ 2156  k get nodes -o wide
+ 2157  k uncordon demo-worker2
+ 2158  k get nodes -o wide
+ 2159  k get pvc
+ 2160  k get pod
+ 2161  k describe node demo-worker
+ 2162  k describe node demo-worker2
+ 2164  k get pod -o wide
+ 2165  k get pv
+ 2166  k get pvc
+ 2168  k describe pv pvc-5f320da7-a635-4a39-8a1f-3c2dade48333
+ 2169  k exec -it nginx-pod1 bash
+ 2190  k delete pv pv1
+ 2191  k get pvc
+ 2192  k delete pvc pvc1
+ 2193  k get pvc
+ 2194  k get pod -o wide
+ 2195  k delete po nginx-pod1
+ 2196  k get pod -o wide
+ 2197  k get pvc
+ 2207  cat pvc.yaml 
+ 2208  k get pv
+ 2215  k get all -o wide
+ 2216  k apply -f pv.yaml 
+ 2217  k apply -f pvc.yaml 
+ 2218  k apply -f pod-volume.yaml 
+ 2219  k get all -o wide
+ 2220  k get pv
+ 2221  k get pvc
+ 2222  k get pv
+ 2223  k get all -o wide
+ 2224  k exec -it nginx-pod1 bash
+ 2235  vi pv.yaml 
+ 2236  k delete po nginx-pod1
+ 2237  k delete pvc pvc1
+ 2238  k delete pv pv1
+ 2239  k get pv
+ 2240  k apply -f pv.yaml 
+ 2241  k get pvc
+ 2242  k apply -f pvc.yaml 
+ 2243  k apply -f pod-volume.yaml 
+ 2244  k exec -it nginx-pod1 bash
+ 2249  vi pod-volume.yaml 
+ 2250  cd /var/lib/docker
+ 2255  find . -name xx
+ 2256  cat ./76a30584496d42c90a9bca85038e7fa10f193fcf90c3a2deb83c75ece3d9561d/_data/local-path-provisioner/pvc-e676e547-8a21-4ff2-b358-6d6fce87cdc7_default_pvc1/xx
+ 2260  vi pod-volume.yaml 
+ 2261  vi pv.yaml 
+ 2262  cd /opt/
+ 2269  cat pv.yaml 
+ 2270  cat pod-volume.yaml 
+ 2273  car pv.yaml 
+ 2274  cat pv.yaml 
+ 2275  vi pv.yaml 
+ 2276  vi pvc.yaml 
+ 2277  k explain pv.spec.storageClassName
+ 2278  vi pvc.yaml 
+ 2279  k delete po nginx-pod1
+ 2280  k delete pvc pvc1
+ 2281  k delete pv pv1
+ 2282  k get all -o wide
+ 2283  k get pv
+ 2284  k get pvc
+ 2285  k apply -f pv.yaml 
+ 2286  k apply -f pvc.yaml 
+ 2287  k apply -f pod-volume.yaml 
+ 2288  k get all -o wide
+ 2289  k get pvc
+ 2290  k get pv
+ 2291  k get pvc
+ 2292  cat pvc.yaml 
+ 2293  k get pvc
+ 2294  vi pvc.yaml 
+ 2295  k get pvc
+ 2296  k delete pvc pvc1
+ 2297  k apply -f pvc.yaml 
+ 2298  k get pvc
+ 2299  k describe pvc pvc1
+ 2300  vi pv.yaml 
+ 2301  k delete pv pv1
+ 2302  k delete po nginx-pod1
+ 2303  k delete pvc pvc1
+ 2304  k get pvc
+ 2305  k get pv
+ 2306  k get all -o wide
+ 2307  k get nodes -o wide
+ 2308  docker ps
+ 2309  cd /var/lib/docker/volumes/
+ 2310  cd /opt/
+ 2312  k get pod -o wide
+ 2313  docker exec -it a66e4cd636f3 bash
+ 2316  k get pod -o wide
+ 2317  k apply -f pv.yaml 
+ 2318  cat pv.yaml 
+ 2319  k apply -f pvc.yaml 
+ 2320  k apply -f pod-volume.yaml 
+ 2321  k get pod -o wide
+ 2322  k delete po nginx-pod1
+ 2323  vi pod-volume.yaml 
+ 2324  vi pv.yaml 
+ 2325  vi pvc.yaml 
+ 2326  k delete pvc pvc1
+ 2327  k delete pv pv1
+ 2328  k apply -f pv.yaml 
+ 2329  k apply -f pvc.yaml 
+ 2330  k apply -f pod-volume.yaml 
+ 2331  k get pod -o wide
+ 2332  k get pv
+ 2333  k get pvc
+ 2334  k get pod -o wide
+ 2335  docker ps
+ 2336  docker exec -it 20295c97584b bash
+ 2337  k exec -it nginx-pod1 bash
+ 2338  docker exec -it 20295c97584b bash
+ 2339  docker ps
+ 2340  docker exec -it dc7e17054582 bash
+ 2341  docker exec -it a66e4cd636f3
+ 2342  docker exec -it a66e4cd636f3 bash
+
+

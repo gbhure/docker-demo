@@ -1,0 +1,193 @@
+Docker networking, docker compose
+————————————————
+
+docker run -d -p 5000:5000 --restart=always --name myregistry registry:2
+docker pull ubuntu:16.04
+docker tag ubuntu:16.04 localhost:5000/myubuntu
+docker push localhost:5000/myubuntu
+docker image remove ubuntu:16.04
+docker image remove localhost:5000/myubuntu
+docker pull localhost:5000/myubuntu
+docker rmi localhost:5000/myubuntu
+docker rmi ubuntu:16.04
+docker images
+docker pull localhost:5000/myubuntu
+docker images
+docker pull nginx
+
+docker network ls
+docker network prune
+docker network ls
+docker network inspect bridge
+docker ps
+docker stop 419c9867d2f9
+docker rm 419c9867d2f9
+docker network inspect bridge
+docker network ls
+
+ifconfig
+docker run -it --name first -p 8081:8080 -d test1:1.1 
+docker ps
+ifconfig
+docker ps
+docker exec -it first bash
+docker run -it --name second -p 8082:8080 -d test1:1.1 
+docker network ls
+docker network bridge
+docker network inspect bridge
+docker exec -it second bash
+
+docker run -it --name nginx -p 8083:8080 -d --image=nginx
+docker images
+docker run -it image nginx --name nginx -p 8083:8080 
+docker run -it --name c1 -d nginx
+docker exec -it c1 bash
+docker network ls
+docker network inspect bridge
+
+docker network create mynet --subnet 192.168.80.0/16
+docker network ls
+ifconfig
+docker network inspect mynet
+docker run -it --name myc1 --network mynet -p 8090:8080 -d test1:1.1 
+docker network inspect mynet
+docker network ls
+docker exec -it myc1 bash
+
+docker network ?
+docker run -it --name third 8081:8080 -d pasupsdocker/img1:1.0
+docker images
+docker run -it --name five -d ubuntu
+docker ps
+docker network ls
+docker network inspect mynet
+docker network inspect bridge
+docker connect bridge myc1
+docker network connect bridge myc1
+docker network inspect bridge
+docker network inspect mynet
+docker exec -it myc1 bash
+ifconfig
+docker run --name myc2 -it -d tomcat
+docker stop myc2
+docker rm myc2
+docker run --name myc2 --network mynet -it -d tomcat
+docker network inspect mynet
+docker exec -it myc1 bash
+docker exec -it myc2 bash
+docker network disconnect myc1 
+docker network disconnect bridge myc1
+docker exec -it myc1 bash
+docker run --name myc2 --network mynet -it -d tomcat^C
+docker network inspect bridge
+
+
+
+Docker compose
+———
+sudo curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+docker-compose --version
+
+# OR --> apt install docker-compose -- Problem
+
+docker-compose version
+root@ip-172-31-43-24:~/docker/docker-compose# cat compose.yaml 
+version: "2"
+services:
+  web:
+    build: .
+    ports:
+      - "80:5000"
+    links:
+      - redis
+    networks:
+      - mynet
+  redis:
+    image: redis:latest
+    expose:
+      - "6379"
+    networks:
+      - mynet
+networks:
+  mynet:
+
+root@ip-172-31-43-24:~/docker/docker-compose# cat Dockerfile 
+FROM python:2.7
+COPY . /tmp
+RUN pip install -r /tmp/requirements.txt
+EXPOSE 5000
+CMD [ "python", "/tmp/app.py" ]
+
+
+root@ip-172-31-43-24:~/docker/docker-compose# ls
+Dockerfile  app.py  compose.yaml  requirements.txt  webapp
+
+
+root@ip-172-31-43-24:~/docker/docker-compose# cat app.py 
+from flask import Flask
+from redis import Redis
+import os
+import socket
+
+app = Flask(__name__)
+redis = Redis(host=os.environ.get('REDIS_HOST', 'redis'), port=6379)
+
+@app.route('/')
+def hello():
+    redis.incr('hits')
+    return 'Hello from Container! I have been seen %s times and my hostname is %s\n' % (redis.get('hits'), socket.gethostname())
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080, debug=True)
+
+root@ip-172-31-43-24:~/docker/docker-compose# cat requirements.txt 
+flask
+redis
+
+
+
+
+
+
+docker-compose -f compose.yaml up -d
+
+
+docker network inspect dockercompose_mynetdocker
+docker stop 0626f19a9b5b366b0dfda0f7ebe58ee8cf89f22f0005e5ddbb6bc45f49e9a9cf
+docker rm 0626f19a9b5b366b0dfda0f7ebe58ee8cf89f22f0005e5ddbb6bc45f49e9a9cf
+docker stop ae6cd5fe9ef8d11223fdc4fca36aee5ab18a5ed4585728754d2ab1d4d3aa84a1
+docker rm ae6cd5fe9ef8d11223fdc4fca36aee5ab18a5ed4585728754d2ab1d4d3aa84a1
+
+docker network rm dockercompose_mynet
+
+
+
+root@ip-172-31-43-24:~/docker# git clone https://github.com/opencord/voltha.git
+Cd ~/docker/voltha/compose
+
+docker-compose -f compose.yaml up -d
+
+docker-compose -f compose.yaml down
+
+docker-compose -f compose.yaml scale redis=3
+docker-compose -f compose.yaml ps
+
+
+docker-compose -f compose.yaml up -d
+docker ps
+docker exec -it 7a798a1a8fea bash
+
+docker network ls
+docker network inspect dockercompose_mynet
+docker exec -it 7a798a1a8fea bash
+
+root@ip-172-31-43-24:~/docker/docker-compose# curl localhost:80
+Hello from Container! I have been seen 1 times and my hostname is 71df55be0967
+root@ip-172-31-43-24:~/docker/docker-compose# curl localhost:80
+Hello from Container! I have been seen 2 times and my hostname is 71df55be0967
+
+
+
+
+

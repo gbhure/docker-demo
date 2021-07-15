@@ -1,0 +1,166 @@
+apt update
+apt-get install -y apt-transport-https
+apt install docker.io
+snap install kubectl --classic
+snap install kubelet --classic
+
+curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.8.1/kind-linux-amd64
+chmod +x kind 
+mv kind /usr/local/bin/kind
+vi config
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+- role: worker
+- role: worker
+
+kind create cluster --config config 
+kubectl get nodes
+
+
+
+kubectl apply -f pod.yaml 
+kubectl get pods
+kubectl describe pod pod2
+
+
+
+# k create ns myns1
+# kubectl get ns
+# k get pods -n kube-system -o wide
+
+# kubectl run nginx ——image=nginx ——port=80 ——dry-run=client -o yaml > pod.yaml
+# k explain po.spec.containers
+# k explain po.spec…
+
+K run nginx —image nginx 
+K get pods
+K run nginx —image nginx  —> error creating same pod in default namespace
+K run nginx —image nginx -n myns1
+K get pods -n myns1
+
+
+Deployment
+# k create deploy mydeploy ——image=nginx ——dy-run=client -o yaml > mydeploy.yaml
+# k apply -f deploy 
+# k get all
+# k get pod -o wide
+
+
+
+Scale up
+# k scale deploy mydeploy ——replicas=5
+
+# k autoscale deploy mydeploy ——cpu-percent=80 ——min=2 ——max=5
+
+# k rollout history deploy mydeploy
+# k rollout history deploy mydeploy —revision=1
+
+
+# k rollout history deploy mydeploy
+# k set image deploy mydeploy nginx=nginx:1.7.8    ——> old getting terminated and new getting created
+# k get all —> see new replicaset
+# k rollout history deploy mydeploy
+# k rollout history deploy mydeploy - - revision=1
+# k rollout history deploy mydeploy - - revision=2
+
+# k rollout history deploy mydeploy
+# k rollout undo deploy mydeploy         —> rollback
+# k rollout undo deploy mydeploy ——to-revision=1
+
+
+vi web-pod.yaml 
+vi build/app.py 
+kubectl get all
+k delete po mysql web1
+k delete svc mysql web
+kubectl get all
+kubectl get all -o wide
+k get nodes
+k get nodes -o wide
+docker images
+docker ps -a
+k get all
+k rollout undo deploy mydeploy
+k get all
+k rollout history deploy mydeploy
+cd k8s/
+cd service-demo/
+cd build/
+vi app.py 
+cat requirements.txt 
+cat Dockerfile 
+cd ..
+ls
+cat web-pod.yaml 
+cd -
+docker build -t webapp:1.2 .
+docker images
+docker tag webapp:1.2 gbhure/webapp:1.2
+docker push gbhure/webapp:1.2
+cd ..
+k get all
+k delete deploy mydeploy
+k get all
+cat db-pod.yaml 
+cat db-svc.yaml 
+cat web-svc.yaml 
+cat web-pod.yaml 
+k apply -f db-pod.yaml 
+k get all
+k apply -f db-svc.yaml 
+k get all
+k apply -f web-pod.yaml 
+k get all
+k apply -f web-svc.yaml 
+k get all
+cat web-svc.yaml 
+cat db-svc.yaml 
+k get all -o wide
+k get nodes -o wide
+curl 172.18.0.2:30981/init
+cat build/app.py 
+export NODE_IP=172.18.0.2
+export NODE_PORT=30981
+curl -i -H "Content-Type: application/json" -X POST -d '{"uid": "1", "user":"John Doe"}' http://$NODE_IP:$NODE_PORT/users/add
+curl -i -H "Content-Type: application/json" -X POST -d '{"uid": "2", "user":"Jane Doe"}' http://$NODE_IP:$NODE_PORT/users/add
+curl http://$NODE_IP:$NODE_PORT/users/1
+
+
+ 2047  k create ns myns1
+ 2048  k get ns
+ 2049  k get pods
+ 2050  k get pods -n myns1
+ 2051  k describe ns
+ 2052  k describe ns myns1
+ 2053  k describe ns 
+ 2054  k get pods -A
+ 2055  k get pods --all-namespaces
+ 2057  k run nginx --image nginx
+ 2058  k get all
+ 2059  k get pos
+ 2060  k get pods
+ 2061  k run nginx --image nginx
+ 2062  k run nginx --image nginx -n myns1
+ 2063  k run nginx --image nginx
+ 2064  k get pods
+ 2065  k get pods -n myns1
+ 2066  k get pods --all-namespaces
+ 2068  k delete ns myns1
+ 2069  k get ns
+ 2070  k get pods --all-namespaces
+ 2072  k apply -f web-svc.yml  -n myns1
+ 2073  k create ns myns1
+ 2074  k apply -f web-svc.yml  -n myns1
+ 2075  k get all
+ 2076  k get pods --all-namespaces
+ 2078  k apply -f web-svc.yml --namespace=myns1
+ 2079  k get pods --all-namespaces
+ 2081  k apply -f web-pod.yaml --namespace=myns1
+ 2082  k get pods --all-namespaces
+ 2083  vi web-pod.yaml 
+
+
+
+

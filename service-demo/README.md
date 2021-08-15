@@ -49,9 +49,9 @@ curl http://$NODE_IP:$NODE_PORT/init
 ```
 ## Insert some sample data
 ```
-curl -i -H "Content-Type: application/json" -X POST -d '{"uid": "1", "user":"John Doe"}' http://$NODE_IP:$NODE_PORT/users/add
-curl -i -H "Content-Type: application/json" -X POST -d '{"uid": "2", "user":"Jane Doe"}' http://$NODE_IP:$NODE_PORT/users/add
-curl -i -H "Content-Type: application/json" -X POST -d '{"uid": "3", "user":"Bill Collins"}' http://$NODE_IP:$NODE_PORT/users/add
+curl -i -H "Content-Type: application/json" -X POST -d '{"uid": "1", "user":"Aakash M"}' http://$NODE_IP:$NODE_PORT/users/add
+curl -i -H "Content-Type: application/json" -X POST -d '{"uid": "2", "user":"Fredrick K"}' http://$NODE_IP:$NODE_PORT/users/add
+curl -i -H "Content-Type: application/json" -X POST -d '{"uid": "3", "user":"Alexandre P"}' http://$NODE_IP:$NODE_PORT/users/add
 curl -i -H "Content-Type: application/json" -X POST -d '{"uid": "4", "user":"Mike Taylor"}' http://$NODE_IP:$NODE_PORT/users/add
 ```
 

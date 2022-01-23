@@ -1,1 +1,32 @@
 https://kubernetes.io/docs/tasks/access-application-cluster/ingress-minikube/
+
+
+
+ 1181  kubectl create deployment web --image=gcr.io/google-samples/hello-app:1.0
+ 1182  k get all
+ 1183  kubectl expose deployment web --type=NodePort --port=8080 --dry-run=client -o yaml
+ 1184  kubectl expose deployment web --type=NodePort --port=8080
+ 1185  k get all
+ 1186  k get nodes
+ 1187  k get nodes -o wide
+ 1188  curl 172.19.0.3:30423
+ 1189  kubectl create deployment web2 --image=gcr.io/google-samples/hello-app:2.0
+ 1190  kubectl expose deployment web2 --port=8080 --type=NodePort
+ 1191  k get all
+ 1192  curl 172.19.0.3:31610
+ 1193  curl 172.19.0.3:30423
+ 1194  vi ingress.yaml
+ 1195  cat ingress.yaml
+ 1196  k apply -f ingress.yaml
+ 1197  k get all
+ 1198  k get ns
+ 1199  k get ingress
+ 1200  curl hello-world.info/v1
+ 1201  k get ingress
+ 1202  curl hello-world.info/v1
+ 1203  curl 172.19.0.2/v1
+ 1204  curl 172.19.0.2:80/v1
+ 1205  vi /etc/hosts
+ 1206  curl hello-world.info/v1
+ 1207  curl hello-world.info/v2
+ 1208  cat ingress.yaml

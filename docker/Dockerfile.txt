@@ -1,6 +1,5 @@
-FROM python:2.7
+FROM python:3.7
 COPY . /tmp
-RUN pip install -r /tmp/requirements.txt
+RUN pip install flask
 EXPOSE 8080
-ENTRYPOINT [“echo”]
-CMD [ "python", "/tmp/http_serv.py" ]
+CMD ["python", "/tmp/myapp.py"]

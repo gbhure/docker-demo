@@ -1,4 +1,5 @@
-docker build -t gbhure/web .
+docker build -t webapp .
+<tag>
 docker push gbhure/web
 docker run -d --name firstcontainer -p 8080:8080  gbhure/web
 k run mywebapp --image=gbhure/web --restart=Never

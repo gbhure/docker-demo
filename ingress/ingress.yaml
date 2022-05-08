@@ -12,13 +12,13 @@ spec:
         pathType: "Prefix"
         backend:
           service:
-            Name: "web"
-          service:
-            Port: 8080
+            name: "web"
+            port:
+              number: 8080
       - path: "/v2"
         pathType: "Prefix"
         backend:
           service:
-            Name: "web2"
-          service:
-            Port: 8080
+            name: "web2"
+            port:
+              number: 8080

@@ -1,4 +1,4 @@
-apiVersion: "networking.k8s.io/v1beta1"
+apiVersion: "networking.k8s.io/v1"
 kind: "Ingress"
 metadata:
   name: "example-ingress"
@@ -11,10 +11,14 @@ spec:
       - path: "/v1"
         pathType: "Prefix"
         backend:
-          serviceName: "web"
-          servicePort: 8080
+          service:
+            Name: "web"
+          service:
+            Port: 8080
       - path: "/v2"
         pathType: "Prefix"
         backend:
-          serviceName: "web2"
-          servicePort: 8080
+          service:
+            Name: "web2"
+          service:
+            Port: 8080

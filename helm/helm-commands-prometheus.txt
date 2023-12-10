@@ -1,0 +1,155 @@
+
+Prometheus
+——
+https://artifacthub.io/
+https://prometheus.io/docs/introduction/overview/
+https://github.com/prometheus-community/helm-charts/
+
+
+https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
+helm install stable prometheus-community/kube-prometheus-stack
+
+
+https://github.com/grafana/helm-charts/tree/main/charts/grafana#grafana-helm-chart
+
+
+
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add kube-state-metrics https://kubernetes.github.io/kube-state-metrics
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+
+helm install stable prometheus-community/prometheus
+helm install my-release grafana/grafana
+
+
+https://helm.sh/docs/intro/install/
+
+curl https://baltocdn.com/helm/signing.asc | sudo apt-key add -
+sudo apt-get install apt-transport-https --yes
+echo "deb https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+sudo apt-get update
+sudo apt-get install helm
+
+
+OR
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+$ chmod 700 get_helm.sh
+$ ./get_helm.sh
+
+
+OR
+https://github.com/helm/helm/releases
+
+
+
+
+
+PromQL — https://prometheus.io/docs/prometheus/latest/querying/basics/
+
+
+ 2006  helm
+ 2007  curl https://baltocdn.com/helm/signing.asc | sudo apt-key add -
+ 2008  sudo apt-get install apt-transport-https --yes
+ 2010  echo "deb https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+ 2011  sudo apt-get update
+ 2012  sudo apt-get install helm
+ 2013  helm version
+ 2015  k get all
+ 2016  kind delete cluster --name=demo
+ 2019  kind create cluster --name=demo --config config
+ 2027  mkdir abc
+ 2028  cd abc/
+ 2038  k create deploy my-nginx --image=nginx --dry-run=client -o yaml > deploy.yaml
+ 2044  mkdir templates
+ 2051  tree proj1
+ 2052  apt install tree
+ 2053  tree proj1
+ 2073  helm install my-nginx proj1
+ 2074  k get all 
+ 2075  helm list
+ 2077  tree proj1
+ 2078  cd proj1/
+ 2080  cat Chart.yaml 
+ 2082  kubectl expose deployment/my-nginx  --port=80 --dry-run=client -o yaml > svc.yaml
+ 2083  mv svc.yaml templates/
+ 2085  tree proj1/
+ 2086  k get all 
+ 2087  helm upgrade my-nginx proj1
+ 2088  helm list
+ 2089  cat proj1/Chart.yaml 
+ 2091  cd proj1/
+ 2093  helm upgrade my-nginx proj1
+ 2094  helm upgrade my-nginx .
+ 2095  helm list
+ 2096  helm rollback my-nginx 1
+ 2097  helm list
+ 2098  k get all 
+ 2099  helm rollback my-nginx 3
+ 2105  helm history my-nginx
+ 2106  helm delete my-nginx
+ 2111  vi values.yaml
+ 2112  vi templates/deploy.yaml 
+ 2114  vi Chart.yaml 
+ 2115  helm install mynginx .
+ 2116  k get all 
+ 2117  vi values.yaml 
+ 2118  k get all 
+ 2121  helm install mynginx --set replicaCount=5
+ 2124  helm install --name mynginx . --set replicaCount=5
+ 2125  helm install mynginx . --set replicaCount=5
+ 2126  helm delete mynginx
+ 2127  helm install mynginx . --set replicaCount=5
+ 2131  helm inspect values .
+ 2132  helm upgrade my-nginx . --set replicaCount=2
+ 2133  helm upgrade mynginx . --set replicaCount=2
+ 2135  helm upgrade mynginx . 
+ 2151  helm create my-app
+ 2154  tree my-app/
+ 2155  vi my-app/templates/deployment.yaml 
+ 2156  vi my-app/values.yaml 
+ 2157  k get all 
+ 2159  helm install my-app .
+ 2160  helm install my-app my-app
+ 2161  k get all 
+ 2163  helm delete my-app
+ 2164  vi my-app/values.yaml 
+ 2166  helm install my-app my-app
+ 2168  k get deploy
+ 2170  tree .
+ 2178  helm install test nginx
+ 2182  helm get all my-app
+ 2188  k get all 
+ 2189  helm version
+ 2208  helm list
+ 2212  cat values.yaml 
+ 2213  cat templates/deploy.yaml 
+ 2214  cat templates/svc.yaml 
+ 2216  helm list
+ 2217  helm uninstall mynginx
+ 2227  helm upgrade my-app .
+ 2228  helm list
+ 2229  k get all 
+ 2230  k describe po my-app-6fb97569fc-8c5th
+ 2232  helm rollback my-app 1
+ 2233  helm list
+ 2239  helm upgrade my-app .
+ 2242  k describe pod/my-app-6fb97569fc-bmrqn
+ 2247  helm uninstall my-app
+
+ 2254  helm repo add grafana https://grafana.github.io/helm-charts
+ 2257  helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+ 2258  helm repo add kube-state-metrics https://kubernetes.github.io/kube-state-metrics
+ 2259  helm repo update
+ 2260  helm install stable prometheus-community/prometheus
+ 2264  k port-forward pod/stable-prometheus-server-5f6fc5c458-9p8qp 9090
+ 2265  k logs pod/stable-prometheus-node-exporter-25hnx
+ 2266  k logs -f pod/stable-prometheus-node-exporter-25hnx
+ 2267  helm install my-release grafana/grafana
+ 2268  k get all 
+ 2269  k port-forward pod/my-release-grafana-8fdd5d6b-q8hlg 3000
+ 2270  kubectl get secret --namespace default my-release-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+ 2271  echo bzY9yN9rMYUwQhsaKzsByd8FijYncocCiFX53lgd | base64
+ 2272  k port-forward pod/my-release-grafana-8fdd5d6b-q8hlg 3000
+
+

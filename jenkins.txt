@@ -1,0 +1,128 @@
+
+Install Jenkins — https://www.jenkins.io/doc/book/installing/linux/
+——
+
+$ sudo apt update
+$ sudo apt install default-jdk
+
+sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
+  https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]" \
+  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
+sudo apt-get update
+sudo apt-get install jenkins
+
+
+Install firefox
+——
+$ sudo snap install firefox
+
+
+
+
+DevOps Overview
+Introduction to Jenkins
+Jenkins Installation
+Creating your first Jenkins job
+Adding nodes/agents (master-slave configuration)
+Creating pipeline project
+Scripted/declarative pipeline
+GitHub integration with Jenkins
+Maven integration with Jenkins
+Explored plugins
+User roles management 
+Email configuration
+Blue ocean plugin for better visualization 
+Multi branch pipeline
+
+
+
+
+
+Adding Jenkins slave node/Agent 
+————————————
+
+
+
+
+Declarative pipeline
+———————
+pipeline {
+    agent any
+
+    stages {
+        stage('stage1 - clone your project') {
+            steps {
+                echo 'cloning a public repository'
+                git "https://github.com/gbhure/new-repo-24mar.git"
+                // sh "git clone https://github.com/gbhure/new-repo-24mar.git"
+            }
+        }
+        stage('stage2') {
+            steps {
+                sh "pwd"
+                sh "ls"
+            }
+        }
+        stage('stage3') {
+            steps {
+                echo 'cloning a private repository'
+                git credentialsId: 'github', url: 'https://github.com/gbhure/Demo-24Mar24.git'
+            }
+        }
+        stage('stage4') {
+            steps {
+                sh "pwd"
+                sh "ls"
+            }
+        }
+    }
+}
+
+
+Maven integration
+————————
+https://github.com/gbhure/mvn-project
+
+Manage Jenkins —> Tools —> Maven Installations
+Name —> maven
+Version —> 3.6.3
+
+pipeline {
+    agent any
+    tools {
+        maven "maven"
+    }
+    stages {
+        stage('stage1 - clone your project') {
+            steps {
+                echo 'cloning a public repository'
+                git branch: 'main', url: "https://github.com/gbhure/mvn-project.git"
+            }
+        }
+        stage('stage2') {
+            steps {
+                sh "pwd"
+                sh "ls"
+            }
+        }
+        stage('building the maven project') {
+            steps {
+                sh "mvn install"
+            }
+        }
+    }
+}
+
+Github Integration
+————————
+
+Freestyle project —> Build Trigrers —> Select “GitHub hook trigger for GITScm polling”
+
+On GitHub repo —> demo-12mar
+—> Settings —> Webhooks, add below URL in “payload url”
+
+http://43.204.36.175:8080/github-webhook/
+
+

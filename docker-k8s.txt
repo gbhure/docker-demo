@@ -1,0 +1,95 @@
+
+Docker basics
+——
+   10  docker images
+   11  docker ps
+   12  docker pull nginx
+   13  docker images
+   14  docker run -d --name nginx -p 80:80 nginx
+   15  docker ps
+   16  ls
+   17  cat Dockerfile
+   18  vi myapp.py
+   19  docker build -t myapp:1.0 .
+   20  docker images
+   21  history | tail -20
+   22  cat Dockerfile
+   23  cat myapp.py
+   24  docker run -d --name myapp -p 8080:8080 myapp:1.0
+   25  docker rm myapp
+   26  docker run -d --name myapp -p 8081:8080 myapp:1.0
+   27  history | tail -20
+root@ip-172-31-14-245:/home/ubuntu/docker-demo# cat Dockerfile
+FROM python:3.7
+COPY myapp.py /tmp
+RUN pip install flask
+EXPOSE 8080
+CMD ["python", "/tmp/myapp.py"]
+root@ip-172-31-14-245:/home/ubuntu/docker-demo# cat myapp.py
+from flask import Flask
+import os
+
+app = Flask(__name__)
+@app.route('/')
+
+def hello():
+    return('Hello from container..This is my first docker container\n')
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080, debug=True)
+root@ip-172-31-14-245:/home/ubuntu/docker-demo#
+
+
+  
+
+Install kind cluster
+————
+https://kind.sigs.k8s.io/docs/user/quick-start/
+
+Install kind
+# For AMD64 / x86_64
+[ $(uname -m) = x86_64 ] && curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.22.0/kind-linux-amd64
+# For ARM64
+[ $(uname -m) = aarch64 ] && curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.22.0/kind-linux-arm64
+chmod +x ./kind
+sudo mv ./kind /usr/local/bin/kind
+
+
+root@ip-172-31-14-245:/home/ubuntu# cat kind-config.yaml
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+- role: worker
+- role: worker
+
+   21  kind create cluster --config kind-config.yaml
+   22  kubectl get no
+   23  docker ps
+   24  kubectl get po
+   25  kubectl run nginx --image=nginx
+   26  kubectl get po
+   27  kubectl delete po nginx
+   28  kubectl get po
+   30  kubectl run nginx --image=nginx --dry-run=client -o yaml
+   31  vi pod.yaml
+   32  cat pod.yaml
+   33  kubectl api-resources
+   34  cat pod.yaml
+   35  kubectl get po
+   36  kubectl apply -f pod.yaml
+   37  kubectl get po
+   39  kubectl expose po nginx --type=NodePort --port 80 --dry-run=client -o yaml
+   40  kubectl expose po nginx --type=NodePort --port 80 --dry-run=client -o yaml > svc.yaml
+   41  kubectl get po
+   42  kubectl get svc
+   43  kubectl get all
+   44  kubectl apply -f svc.yaml
+   45  kubectl get all
+   46  kubectl get no -o wide
+   48  curl 172.18.0.2:31310
+
+
+
+
+     

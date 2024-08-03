@@ -565,7 +565,8 @@ kubectl delete deploy webappkubectl delete hpa webapp
 
 82. Create a Job with an image node which prints node version and also verifies there is a pod created for this job
 
-kubectl create job nodeversion --image=node -- node -vkubectl get job -w
+kubectl create job nodeversion --image=node -- node -v
+kubectl get job -w
 kubectl get pod
 
 83. Get the logs of the job just created

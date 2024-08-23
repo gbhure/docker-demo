@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: testadmbinding
+  namespace: myns1
+subjects:
+  - kind: ServiceAccount
+    name: mysa1
+    apiGroup: ""
+roleRef:
+  kind: Role
+  name: testadm
+  apiGroup: ""

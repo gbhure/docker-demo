@@ -3,5 +3,5 @@ kind: StorageClass
 metadata:
   name: demo-storage
 provisioner: k8s.io/minikube-hostpath
-volumeBindingMode: Immediate
+volumeBindingMode: Immediate    # PV gets created immediately when PVC is created. or WaitForFirstConsumer
 reclaimPolicy: Delete
